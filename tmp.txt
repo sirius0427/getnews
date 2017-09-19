@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd>
+ 
+
+
+
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<title>标题</title>
+<!-- 头部 -->
+    <link type="text/css" rel="stylesheet" href="/tzxmspweb/tzxmweb/Resources/css/zxx.lib.css">
+<link type="text/css" rel="stylesheet" href="/tzxmspweb/tzxmweb/Resources/css/slide6.css">
+<link type="text/css" rel="stylesheet" href="/tzxmspweb/tzxmweb/js/jDialog/jDialog.css">
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/jquery.validate.min.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/messages_zh.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/portal.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/Resources/js/initdata.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/js/jDialog/jDialog.js"></script>
+
+
+<link type="text/css" rel="stylesheet" href="/tzxmspweb/tzxmweb/Resources/css/slide.css">
+<script type="text/javascript" src="/tzxmspweb/unieap/pages/workflow/js/Calendar/WdatePicker.js"></script>
+<script type="text/javascript" language="javascript" src="/tzxmspweb/tzxmweb/js/jquery.placeholder.min.js"></script>	
+</head>
+
+<script type="text/javascript">
+	var _IE = (function(){
+	var v = 3, div = document.createElement('div'), all = div.getElementsByTagName('i');
+		while (
+			div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+			all[0]
+		);
+		return v > 4 ? v : (document.documentMode ? document.documentMode : false);
+	}());
+   function publicInformation(){
+   		var publicInformation = "1";
+   		if(publicInformation!="1"){
+   			document.getElementById("publicInformationForm").submit();
+   		}
+   		if (_IE <= 9) {
+			$("#project_name").placeholder();
+			$("#itemname").placeholder();
+			$("#dept_name").placeholder();
+		}
+   		var apply_date_begin = "2017-01-31";
+	   	var project_area = "01";
+	   	var applyProjectName = "";
+	   	var itemname = "";
+	   	var dept_name = "";
+	   	var obtainresult = "";
+	   	var apply_date_end = "";
+	   	if(applyProjectName != "" && applyProjectName != null){
+	   		$("#project_name").val(applyProjectName);
+	   	}
+	   	if(itemname != "" && itemname != null){
+	   		$("#itemname").val(itemname);
+	   	}
+	   	if(dept_name != "" && dept_name != null){
+	   		$("#dept_name").val(dept_name);
+	   	}
+	   	if(apply_date_begin != "" && apply_date_begin != null){
+	   		$("#apply_date_begin").val(apply_date_begin);
+	   	}
+	   	if(apply_date_end != "" && apply_date_end != null){
+	   		$("#apply_date_end").val(apply_date_end);
+	   	}
+	   	if(project_area != "" && project_area != null){
+	   		$("#"+project_area).attr("selected",true);
+	   	}
+	   	if(obtainresult != "" && obtainresult != null){
+	   		$("#"+obtainresult).attr("selected",true);
+	   	}
+   }
+   function goPage(optType){
+    		switch(optType){
+				case 'first':
+				  $("#pageNo").val(1);
+				  break;
+				case 'previous':
+				  $("#pageNo").val(parseInt($("#pageNo").val())-1);
+				  break;
+				case 'next':
+				  $("#pageNo").val(parseInt($("#pageNo").val())+1);
+				  break;
+				case 'last':
+				  $("#pageNo").val(6);
+				  break;
+				default:
+				  $("#pageNo").val(1);
+    	}
+    	$("#serviceForm").submit();
+    }
+   function goToPage(){
+   	var pageNum = $("#pageNum").val();
+   	$("#pageNo").val(pageNum);
+   	$("#serviceForm").submit();
+   }
+    function doSerach(){
+   		$("#serviceForm").submit();
+  }	   
+function setOrder(level) {
+		var searchCondition = $("#searchCondition").val();
+		if(searchCondition==" 项目代码/项目名称"){
+			searchCondition="";
+		}
+    	var currentLevel = "8";
+    	if (level == "xmdm") {
+    		if (currentLevel == "2"){
+    		  	
+    	        $("#orderFlag").val("1");
+    	         doSerach();
+    		}
+   			else{
+   			  $("#orderFlag").val("2");
+   			  doSerach();
+   			}
+    	}
+    	if (level == "xmmc") {
+    		if (currentLevel == "4")
+    		{	  $("#orderFlag").val("3");  	
+    		 doSerach();
+    		}	
+   			else{	  $("#orderFlag").val("4");  	
+   			 doSerach();
+   			}
+    	}
+    	if (level == "spsx") {
+    		if (currentLevel == "6"){
+    		  $("#orderFlag").val("5");  	
+    		   doSerach();
+    		}
+   			else{  $("#orderFlag").val("6");  	
+   			 doSerach();
+   			}
+    	}
+    	if (level == "spsj") {
+    		if (currentLevel == "8"){
+    		    $("#orderFlag").val("7");  	
+    		     doSerach();
+   			}else{
+   			    $("#orderFlag").val("8");  	
+   			     doSerach();
+   			}
+    	}
+     }
+     $(function(){
+     	setParentIframeHeight();
+     });
+     function setParentIframeHeight(){
+     	var bHeight = $(".box_main_t").height();
+     	if(bHeight<300){
+     	   $(parent.document).find("#iframepage").height(bHeight+110);
+     	}
+     	else{
+     	   $(parent.document).find("#iframepage").height(bHeight+10);
+     	}
+     };
+</script>
+  <style type="text/css">
+	.liChild{
+	margin:0px;
+	line-height:30px;
+	height:30px;
+	dispaly:block;	
+	float:left;
+	font-family: "微软雅黑";
+	font-size:14px;
+	}
+	li>span,tr>td{
+		cursor:default;
+	}
+	#table_header>td{
+		border-bottom:1px solid #E6E6E6;
+		color:#AFAFAF;
+	}
+	.topcs a:link{text-decoration:none;font-family: "微软雅黑", "Arial Narrow", "Times New Roman"; font-size: 14px; color: #3e3e3e }
+	.topcs a:visited{text-decoration:underline; font-size: 14px; color: #cc0000}
+	.topcs a:hover{text-decoration:underline; font-size: 14px; color: #cc0000}
+	.topcs a:active{text-decoration:none; font-size: 14px; color: #cc0000}
+	.tfooter td, .tfooter a:link{color:#989898;}
+	.title{font-family: "微软雅黑";font-size:22px;border-bottom: 1.5px solid #bababa;float:left;width:100%;text-align:left}
+	.condition{margin-top:8px;margin-right:5px;font-family: "微软雅黑";}
+	input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
+		color: #000000; 
+	} 
+	input:-moz-placeholder, textarea:-moz-placeholder { 
+		color: #000000; 
+	} 
+	input::-moz-placeholder, textarea::-moz-placeholder { 
+		color: #000000; 
+	} 
+	input:-ms-input-placeholder, textarea:-ms-input-placeholder { 
+		color: #000000;
+	}
+	.placeholder {
+		color: #000000;
+	} 
+} 
+</style>
+<body onload="publicInformation()"  style=" color:#3e3e3e;backgorund-color:white;background: none;">
+<!-- 正文 -->
+<div class="clear" />
+<div class="box_cont" style="width:100%;border:0px">
+<div class="box_main">
+<div class="box_main_t" style="border: 0;">
+<div class="flleft" style="display:none"  minheight="660px">
+	<div class="sha_title">公示信息</div>
+	<div>
+		<a href="javascript:void(0)" onclick="javascript:window.parent.location.href ='/tzxmspweb/tzxmweb/pages/portal/fpages/f_more.jsp'">
+			<img src="/tzxmspweb/tzxmweb/Resources/images/ren_mo.jpg" width="235" height="70">
+		</a>
+	</div>
+	<div>
+		<img src="/tzxmspweb/tzxmweb/Resources/images/ren_mo2.jpg" width="235" height="70">
+	</div>
+</div>
+<div style='width:100%'>
+    <div class="title">&nbsp;办理结果公示查询</div><br><br>
+    <div style="background:#F5F5F5;width:100%" >
+        <form id="serviceForm" name="serviceForm" action="/tzxmspweb/portalopenPublicInformation.do?method=queryExamineAll" method="post">
+           <div>
+           	   <input id="orderFlag"  name="orderFlag" type="hidden" />
+           	   <input id="pageSize" name="pageSize"type="hidden" value="10" /> 
+			   <input id="pageNo" name="pageNo" type="hidden" value="1" /> 
+			   <input class="haha_form" type="hidden" placeholder="项目名称" name="apply_project_name" value=></input>
+			   <select  class="light_in" id="project_area" jsId="project_area" name="project_area" size="1" style="width:370px;height:32px;margin-top:-3px;">
+					<option id="01" value="01">中央项目</option>
+					<option id="02" value="02">地方项目</option>
+					<option id="03" value="03">全国项目</option>
+			   </select>
+	           <input class="light_in" style="vertical-align:top;width:470px;height:32px;margin-top:32px;" id="project_name" name="project_name" type="text" placeholder="项目名称/项目代码"/>
+	           <input type="button" id="btnQuery" style="width:80px;height:32px;background:#1b66c7;color:white;border-color:#1b66c7;margin-top:32px;font-family:'微软雅黑';font-size:14px" value="查询" onClick="doSerach()">
+	           </input>
+           </div>
+           <div style="margin-top:10px;">
+	           <input  class="light_in" style="vertical-align:top;width:183px;height:32px;" id="itemname" name="itemname" type="text" placeholder="审批事项"/>
+	           <input  class="light_in" style="vertical-align:top;width:183px;height:32px;" id="dept_name" name="dept_name" type="text" placeholder="审批部门"/>
+			   <select  class="light_in" id="obtainresult" name="obtainresult" size="1" style="width:183px;height:32px;" >
+				   <option value="" disabled selected style="display:none;">审批结果</option>
+				   <option value="">全部</option>
+				   <option id="1" value="1" >通过</option>
+				   <option id="2" value="2">不通过</option>
+				   <option id="0" value="0">不予受理</option>
+				   <option id="3" value="3">已退件</option>
+				   <option id="5" value="5">其他</option>
+			   </select>
+			   <input type="text"  class="input-text Wdate light_in" id="apply_date_begin" name="apply_date_begin" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:183px;height:32px;vertical-align:top;"/>
+		   	   <input type="text"  class="input-text Wdate light_in" id="apply_date_end" name="apply_date_end" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:183px;height:32px;vertical-align:top;"/>
+		   </div>
+		</form>
+		<br>
+	</div>
+<ul style="border-bottom: 0;" style="width:100%">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="290px" height="32" align="center" onclick="setOrder('xmdm')" ><strong>项目代码</strong>
+  	
+   	
+	
+   		<img src="/tzxmspweb/tzxmweb/pages/portal/provinEvaluate/pic_dw_02_B.png" id="xmdmmg" name="xmdmmg" width="16" height="16" border="0"  style='margin-top:4px; margin-left:2px;' />
+   	
+  	</td>
+    <td width="320px" height="32" align="center" onclick="setOrder('xmmc')" ><strong>项目名称</strong>
+    
+	
+	
+		<img src="/tzxmspweb/tzxmweb/pages/portal/provinEvaluate/pic_dw_02_B.png" id="xmmcimg" name="xmmcimg" width="16" height="16" border="0"  style='margin-top:4px;margin-left:2px;' />
+	
+    </td>
+    <td width="270px" align="center" onclick="setOrder('spsx')" ><strong>审批事项</strong>
+    
+   	
+   	
+   		<img src="/tzxmspweb/tzxmweb/pages/portal/provinEvaluate/pic_dw_02_B.png" id="xmdmmg" name="xmdmmg" width="16" height="16" border="0"  style='margin-top:4px;margin-left:2px;' />
+   	
+    </td>
+    <td width="210" align="center"><strong>审批部门</strong></td>
+    <td width="100px" align="center"><strong>审批结果</strong></td>
+    <td width="100px" height="32" align="center" onclick="setOrder('spsj')" ><strong>审批时间</strong>
+    
+   	
+   		<img src="/tzxmspweb/tzxmweb/pages/portal/provinEvaluate/pic_dw_01_B.png" id="spsjimg" name="spsjimg" width="16" height="16" border="0"  style='margin-top:4px;margin-left:2px;' />
+   	
+   	
+    </td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="中国船舶重工国际贸易有限公司在香港参股投资设立中国船舶租赁有限公司项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=cd43d9b98026483abbe1a31fffacfe96&item_id=3ef44af48e624d258dd10e277160cad3')">【2017-000052-71-03-000423】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="中国船舶重工国际贸易有限公司在香港参股投资设立中国船舶租赁有限公司项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=cd43d9b98026483abbe1a31fffacfe96&item_id=3ef44af48e624d258dd10e277160cad3')">中国船舶重工国际贸易有限公司在香...</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="除涉及敏感国家和地区、敏感行业的企业境外投资项目外，中央管理企业境外投资项目和地方企业投资3亿美元及以上境外投资项目备案" class="topcs" >除涉及敏感国家和地区、敏感...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/07/03</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="巴拿马农化产品销售平台项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=f41e73dffb91436d856cd9b3b8d0c397&item_id=496677efb327492586cf4dbef46a5eb6')">【2017-000052-26-02-000448】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="巴拿马农化产品销售平台项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=f41e73dffb91436d856cd9b3b8d0c397&item_id=496677efb327492586cf4dbef46a5eb6')">巴拿马农化产品销售平台项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="涉及敏感国家和地区、敏感行业的企业境外投资项目核准" class="topcs" >涉及敏感国家和地区、敏感行...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">不通过</td>
+    <td width="100px"  height="32" align="center">2017/06/29</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="洪都拉斯农化产品销售平台项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=de0639e5b953464ebcf17c58a5b3e33c&item_id=496677efb327492586cf4dbef46a5eb6')">【2017-000052-26-02-000452】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="洪都拉斯农化产品销售平台项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=de0639e5b953464ebcf17c58a5b3e33c&item_id=496677efb327492586cf4dbef46a5eb6')">洪都拉斯农化产品销售平台项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="涉及敏感国家和地区、敏感行业的企业境外投资项目核准" class="topcs" >涉及敏感国家和地区、敏感行...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/29</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="尼加拉瓜农化产品销售平台项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=b12263f6a3f040a988f204571bc1af7f&item_id=496677efb327492586cf4dbef46a5eb6')">【2017-000052-26-02-000449】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="尼加拉瓜农化产品销售平台项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=b12263f6a3f040a988f204571bc1af7f&item_id=496677efb327492586cf4dbef46a5eb6')">尼加拉瓜农化产品销售平台项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="涉及敏感国家和地区、敏感行业的企业境外投资项目核准" class="topcs" >涉及敏感国家和地区、敏感行...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/29</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="危地马拉农化产品销售平台项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=9669319efb85483aa9929edd5fc62a2b&item_id=496677efb327492586cf4dbef46a5eb6')">【2017-000052-26-02-000451】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="危地马拉农化产品销售平台项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=9669319efb85483aa9929edd5fc62a2b&item_id=496677efb327492586cf4dbef46a5eb6')">危地马拉农化产品销售平台项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="涉及敏感国家和地区、敏感行业的企业境外投资项目核准" class="topcs" >涉及敏感国家和地区、敏感行...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/29</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="萨尔瓦多农化产品销售平台项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=bdcccbdcf5f2457fb7f58b861208187b&item_id=496677efb327492586cf4dbef46a5eb6')">【2017-000052-26-02-000450】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="萨尔瓦多农化产品销售平台项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=bdcccbdcf5f2457fb7f58b861208187b&item_id=496677efb327492586cf4dbef46a5eb6')">萨尔瓦多农化产品销售平台项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="涉及敏感国家和地区、敏感行业的企业境外投资项目核准" class="topcs" >涉及敏感国家和地区、敏感行...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/29</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="巴西天然气管道公司NTS项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=0fa8fa4ec39542f1b4531f7865414c7b&item_id=3ef44af48e624d258dd10e277160cad3')">【2017-000052-11-03-000437】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="巴西天然气管道公司NTS项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=0fa8fa4ec39542f1b4531f7865414c7b&item_id=3ef44af48e624d258dd10e277160cad3')">巴西天然气管道公司NTS项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="除涉及敏感国家和地区、敏感行业的企业境外投资项目外，中央管理企业境外投资项目和地方企业投资3亿美元及以上境外投资项目备案" class="topcs" >除涉及敏感国家和地区、敏感...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/23</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="中国石化-UOP联合研发中心项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=5afab939baa7407985d6de2f9bc90361&item_id=3ef44af48e624d258dd10e277160cad3')">【2017-000052-73-03-000640】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="中国石化-UOP联合研发中心项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=5afab939baa7407985d6de2f9bc90361&item_id=3ef44af48e624d258dd10e277160cad3')">中国石化-UOP联合研发中心项目</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="除涉及敏感国家和地区、敏感行业的企业境外投资项目外，中央管理企业境外投资项目和地方企业投资3亿美元及以上境外投资项目备案" class="topcs" >除涉及敏感国家和地区、敏感...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/23</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="无线电业务频率规划研究实验室三期工程" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=67201976c2e945b7931c547d375ebba0&item_id=1fb145ab0e4b42fba830d11df53d214a')">【2017-000286-65-01-000397】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="无线电业务频率规划研究实验室三期工程" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=67201976c2e945b7931c547d375ebba0&item_id=1fb145ab0e4b42fba830d11df53d214a')">无线电业务频率规划研究实验室三期...</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="中央和国家机关及事业单位自身能力建设重大项目审批可行性研究报告" class="topcs" >中央和国家机关及事业单位自...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >工业和信息化部</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/22</td>
+  </tr>
+  
+  <tr>
+     <td width="290px"  height="32" align="left" data-toggle="tooltip" title="重庆船舶工业公司收购海装(北美)有限公司股权项目" class="topcs" >
+    
+    	
+    		<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=ddbb4066bb4249409d04f43282e48438&item_id=3ef44af48e624d258dd10e277160cad3')">【2017-000052-44-03-000484】</a>
+    	
+    	
+    
+    </td>
+    <td width="350px"  height="32" align="left" data-toggle="tooltip" title="重庆船舶工业公司收购海装(北美)有限公司股权项目" class="topcs" > 
+         
+    		
+       			<a href="javascript:void(0);" onclick="window.open('/tzxmspweb/portalopenPublicInformation.do?method=queryExamineDetailByUUID&projectuuid=ddbb4066bb4249409d04f43282e48438&item_id=3ef44af48e624d258dd10e277160cad3')">重庆船舶工业公司收购海装(北美)...</a>
+        	
+    		
+    	
+     </td>
+    <td width="270px"  height="32" align="left" data-toggle="tooltip" title="除涉及敏感国家和地区、敏感行业的企业境外投资项目外，中央管理企业境外投资项目和地方企业投资3亿美元及以上境外投资项目备案" class="topcs" >除涉及敏感国家和地区、敏感...</td>
+    <td width="210px"  height="32" align="left" class="topcs" >国家发展和改革委员会</td>
+    <td width="80px"  height="32" align="center">通过</td>
+    <td width="100px"  height="32" align="center">2017/06/20</td>
+  </tr>
+  
+</table>
+	 
+</ul>
+
+<div class="qmanu">共&nbsp;&nbsp;
+6&nbsp;&nbsp;页&nbsp;&nbsp;58条&nbsp;&nbsp;记录
+&nbsp;&nbsp;&nbsp;&nbsp; 
+	<span class="qdisabled">首页</span>&nbsp;&nbsp;
+									  <span class="qdisabled">上一页</span>
+  &nbsp;&nbsp;1&nbsp;&nbsp; &nbsp;&nbsp; 
+	<a href="#" onclick="goPage('next');return false;">下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+									  <a href="#" onclick="goPage('last');return false;">末页</a>
+
+&nbsp;&nbsp;
+<font class='9ptb'>转到第&nbsp;<input type='text' id='pageNum' value="1" style='width:30px;font-size:12px;' />&nbsp;页
+&nbsp;
+<a href="javascript:void(0);" onclick="goToPage();">跳转</a>
+</font>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "LOGS.h"
+#include <mysql.h>
+#include <dlfcn.h>
+
+#define LOG_STYLES_DOG        ( LOG_STYLE_DATETIMEMS | LOG_STYLE_LOGLEVEL | LOG_STYLE_PID | LOG_STYLE_TID | LOG_STYLE_SOURCE | LOG_STYLE_FORMAT | LOG_STYLE_NEWLINE )
+#define LOG_STYLES_EVENT      ( LOG_STYLE_DATETIMEMS | LOG_STYLE_CUSTLABEL1 | LOG_STYLE_FORMAT | LOG_STYLE_NEWLINE )
+
+int getNewsInfo( void )
+{
+	MYSQL *conn_ptr;
+	MYSQL_RES *mysqlresult;
+	MYSQL_ROW mysqlrow;
+	int x,y,numrow,numcol,result;
+	char sql_select_data[300]="SELECT * FROM c_collectionrule";
+	conn_ptr = mysql_init(NULL);
+	void *handle;
+	char *error;
+	typedef int (*pf_t)();   //声明函数指针类型
+
+	if(!conn_ptr)
+	{
+		ERRORLOGG( "mysql_init failed" );
+		return -1;
+	}
+
+	conn_ptr = mysql_real_connect(conn_ptr,"localhost","cst","q1w2e3r4t5Y^U&I*O(P)","zyg",0,NULL,0);
+	if(conn_ptr)
+	{
+		INFOLOGG("Connection success");
+		mysql_query(conn_ptr,"set names utf8");
+		result = mysql_query(conn_ptr,sql_select_data); //查询数据
+		if(result)
+		{
+			ERRORLOGG( "mysql_query select data error %u: %s", mysql_errno(conn_ptr), mysql_error(conn_ptr));
+			return -1;
+		}
+		else
+		{
+			INFOLOGG("select data success");
+			mysqlresult = mysql_store_result(conn_ptr);
+			if(mysqlresult){
+				numrow = mysql_num_rows(mysqlresult);
+				numcol = mysql_num_fields(mysqlresult);
+				for(x=0; x<numrow; x++)
+				{
+					mysqlrow = mysql_fetch_row(mysqlresult);
+					for(y=0; y<numcol; y++)
+					{
+						DEBUGLOGG("[mysqlrow[%d]:%-8s", y, mysqlrow[y]);
+					}
+					handle = dlopen (mysqlrow[6], RTLD_NOW);     //打开数据库中指定的动态库
+					if (!handle)
+					{
+						ERRORLOGG ( "%s\n", dlerror());
+						exit(1);
+					}
+					dlerror();
+					pf_t pf=(pf_t)dlsym(handle,mysqlrow[7] );    //指针pf指向数据库中函数在当前内存中的地址
+					if ((error = dlerror()) != NULL) 
+					{
+						ERRORLOGG( "%s\n", error);
+						exit(1);
+					}
+					int ret = pf( mysqlrow[2], mysqlrow[3], mysqlrow[8]);        //通过指针pf的调用来调用动态库中的test函数
+					if( ret == 0 )
+					{
+						INFOLOGG( "执行函数[%s]成功，未产生记录", mysqlrow[7] );
+					}
+					else if( ret > 0 )
+					{
+						INFOLOGG( "执行函数[%s]成功，产生[%d]条记录", mysqlrow[7], ret );
+					}
+					else
+					{
+						ERRORLOGG( "执行函数[%s]失败", handle,mysqlrow[7] );
+					}
+					dlclose(handle);      //关闭调用动态库句柄
+				}
+			}
+
+		}
+	}
+	else
+	{
+		ERRORLOGG("Connection failed");
+		return -1;
+	}
+
+	mysql_close(conn_ptr);
+
+	return 0;
+}
+
+int main()
+{
+	//LOG	*g = NULL ;
+	//LOGS *gs = NULL;
+	//gs = CreateLogsHandleG() ;	//创建日志句柄集合
+	if(CreateLogHandleG() == NULL )
+		//if( gs == NULL )
+	{
+		printf( "创建日志句柄集失败errno[%d]\n" , errno );
+		return -1;
+	}
+	else
+	{
+		printf( "创建日志句柄集成功\n" );
+	}
+	/*g = CreateLogHandle() ;	//创建日志句柄集合
+	  if( g == NULL )
+	  {
+	  printf( "创建日志句柄失败errno[%d]\n" , errno );
+	  return -1;
+	  }
+	  else
+	  {
+	  printf( "创建日志句柄成功\n" );
+	  }
+	  SetLogOutput( g , LOG_OUTPUT_FILE , "getnews.log" , LOG_NO_OUTPUTFUNC );	//设置日志输出文件名
+	  SetLogLevel( g , LOG_LEVEL_DEBUG );	//设置当前日志过滤等级
+	  SetLogStyles( g , LOG_STYLES_DOG , LOG_NO_STYLEFUNC);	//设置当前行日志风格方案
+	  AddLogToLogs( gs , "file" , g );
+	  SetGlobalLOGS( gs );
+	  */
+	SetLogOutputG( LOG_OUTPUT_FILE , "getnews.log" , LOG_NO_OUTPUTFUNC );
+	SetLogLevelG( LOG_LEVEL_INFO );
+	SetLogStylesG( LOG_STYLES_DOG , LOG_NO_STYLEFUNC);
+
+	DEBUGLOGG( "gethtml 程序开始...DEBUG" );
+	INFOLOGG( "gethtml 程序开始...INFO" );
+	WARNLOGG( "gethtml 程序开始...WARN" );
+	ERRORLOGG( "gethtml 程序开始...ERROR" );
+	FATALLOGG( "gethtml 程序开始...FATAL" );
+
+	int ret = getNewsInfo( );
+	if( ret != 0 )
+	{
+		ERRORLOGG( "取新闻程序执行失败" );
+	}
+
+	DestroyLogHandleG();	//销毁日志句柄集合
+	printf( "关闭日志句柄集成功\n" );
+	return 0;
+}
